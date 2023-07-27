@@ -72,11 +72,21 @@ namespace Student.ConsumerAWS.ConsumerSQS
 
         private async Task SendPdfRequest()
         {
+            // Obtendo o diretório da solução usando Directory.GetCurrentDirectory()
+            string solutionDir = Directory.GetCurrentDirectory();
+
             // Open text file
-            FileStream htmlSource = File.Open("..\\..\\..\\templateBoleto.html", FileMode.Open);
+            // Combinando o diretório da solução com o nome do arquivo desejado
+            string filePath = Path.Combine(solutionDir, "templateBoleto.html");
+
+            // Abertura do arquivo usando FileStream
+            // Caminho do arquivo PDF
+            FileStream htmlSource = File.Open(filePath, FileMode.Open);
 
             // Create PDF file
-            FileStream pdfDest = File.Open("boleto.pdf", FileMode.OpenOrCreate);
+            string filePathPdf = Path.Combine(solutionDir, "boleto.pdf");
+
+            FileStream pdfDest = File.Open(filePathPdf, FileMode.OpenOrCreate);
 
             // Intialize conversion properties
             ConverterProperties converterProperties = new ConverterProperties();
@@ -86,10 +96,9 @@ namespace Student.ConsumerAWS.ConsumerSQS
 
             // Send the PDF file to the QueuePutBoleto queue
             // Caminho do arquivo PDF que deseja enviar
-            var filePath = "/boleto.pdf";
 
             // Verifique se o arquivo PDF existe
-            if (!File.Exists(filePath))
+            if (!File.Exists(filePathPdf))
             {
                 Console.WriteLine("Arquivo PDF do boleto não encontrado.");
                 return;
@@ -97,7 +106,7 @@ namespace Student.ConsumerAWS.ConsumerSQS
             try
             {
                 // Leitura do arquivo PDF para um array de bytes
-                byte[] fileBytes = File.ReadAllBytes(filePath);
+                byte[] fileBytes = File.ReadAllBytes(filePathPdf);
 
                 // Envio do arquivo para a fila SQS
                 var sendMessageRequest = new SendMessageRequest
@@ -116,6 +125,7 @@ namespace Student.ConsumerAWS.ConsumerSQS
             }
 
         }
+
 
         private async Task SendMessageToQueue(string messageBody)
         {

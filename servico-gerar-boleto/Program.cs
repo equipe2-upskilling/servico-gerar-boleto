@@ -1,5 +1,4 @@
-﻿using iText.Html2pdf;
-
+﻿
 using Student.ConsumerAWS.ConsumerSQS;
 using System.Configuration;
 
@@ -8,11 +7,14 @@ string? awsAccessKeyId = ConfigurationManager.AppSettings["AWSAccessKeyId"];
 string? awsSecretAccessKey = ConfigurationManager.AppSettings["AWSSecretAccessKey"];
 string? awsRegion = ConfigurationManager.AppSettings["AWSRegion"];
 string? queueName = ConfigurationManager.AppSettings["QueueName"];
+string? queueNamePut = ConfigurationManager.AppSettings["QueueNamePut"];
+
 
 if (awsAccessKeyId == null) throw new Exception("Chave de Acesso faltando.");
 if (awsSecretAccessKey == null) throw new Exception("Segredo da Chave de Acesso faltando.");
 if (awsRegion == null) throw new Exception("Região faltando.");
 if (queueName == null) throw new Exception("Nome da fila faltando.");
+if (queueNamePut == null) throw new Exception("Nome da fila faltando.");
 
 // Criação do ConsumerAWS
 var consumer = new ConsumerAmazonWS(awsAccessKeyId, awsSecretAccessKey, awsRegion, queueName);
